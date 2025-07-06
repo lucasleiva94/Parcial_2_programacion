@@ -1,6 +1,10 @@
 import random
 from Constantes import *
 import pygame
+import csv
+import os
+import json
+from datetime import datetime
 
 def mostrar_texto(surface, text, pos, font, color=pygame.Color('black')):
     words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
@@ -19,7 +23,6 @@ def mostrar_texto(surface, text, pos, font, color=pygame.Color('black')):
         x = pos[0]  # Reset the x.
         y += word_height  # Start on new row.
 
-#GENERAL
 def crear_elemento_juego(textura:str,ancho:int,alto:int,pos_x:int,pos_y:int) -> dict:
     """Se encarga de crear un elemento en el juego guardando su superficie (textura) y su rectangulo (comportamiento) 
 
@@ -42,7 +45,7 @@ def crear_elemento_juego(textura:str,ancho:int,alto:int,pos_x:int,pos_y:int) -> 
 def crear_lista_respuestas(textura:str,ancho:int,alto:int,pos_x:int,pos_y:int):
     lista_respuestas = []
 
-    for i in range(3):
+    for i in range(4):
         respuesta = crear_elemento_juego(textura,ancho,alto,pos_x,pos_y)
         lista_respuestas.append(respuesta)
         pos_y += 80    
@@ -64,19 +67,17 @@ def crear_botones_menu() -> list:
 def limpiar_superficie(elemento_juego:dict,textura:str,ancho:int,alto:int):
     elemento_juego["superficie"] = pygame.transform.scale(pygame.image.load(textura),(ancho,alto))
 
-#GENERAL (Tanto en pygame, como en el juego en consola)
 def verificar_respuesta(datos_juego:dict,pregunta_actual:dict,respuesta:int) -> bool:
-    if pregunta_actual["respuesta_correcta"] == respuesta:
+    
+    if int(pregunta_actual["respuesta_correcta"]) == respuesta:
         datos_juego["puntuacion"] += PUNTUACION_ACIERTO   
         retorno = True         
     else:
         datos_juego["puntuacion"] -= PUNTUACION_ERROR
         datos_juego["vidas"] -= 1
         retorno = False
-        
     return retorno
 
-#GENERAL (Tanto en pygame, como en el juego en consola)
 def reiniciar_estadisticas(datos_juego:dict):
     datos_juego["vidas"] = CANTIDAD_VIDAS
     datos_juego["puntuacion"] = 0
@@ -91,6 +92,50 @@ def pasar_pregunta(lista_preguntas:list,indice:int,cuadro_pregunta:dict,lista_re
     
     return pregunta_actual
 
-#GENERAL (PUEDE SERVIRME EN PYGAME)
 def mezclar_lista(lista_preguntas:list) -> None:
     random.shuffle(lista_preguntas)
+
+def cargar_preguntas(nombre_archivo):
+    lista_preguntas = []
+    with open(nombre_archivo, mode='r', encoding='utf-8-sig') as archivo:
+        lector = csv.DictReader(archivo)
+        for fila in lector:
+            lista_preguntas.append(dict(fila))  # Cada fila es un diccionario
+            
+    return lista_preguntas
+
+
+
+def guardar_partida(nombre, puntaje, ruta_json="partidas.json"):
+    """
+    Guarda los datos de una partida en un archivo .json
+    args: 
+    nombre(str):recibe el nombre del jugador
+    puntaje(int):puntaje obtenido
+    ruta_json(str): ruta al archivo .json donde vamos a guardar la partida.
+    """
+    partidas = []
+    if os.path.exists(ruta_json):
+        with open(ruta_json, "r", encoding="utf-8-sig") as archivo:
+            contenido = archivo.read().strip()
+            if contenido != "":
+                partidas = json.loads(contenido)
+
+    nueva_partida = {
+        "nombre": nombre,
+        "puntaje": puntaje,
+        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    partidas.append(nueva_partida)
+
+    with open(ruta_json, "w", encoding="utf-8") as archivo:
+        json.dump(partidas, archivo, indent=4, ensure_ascii=False)
+
+
+def ordenar_por_puntaje(lista: list) -> None:
+    n = len(lista)
+    for i in range(n - 1):
+        for j in range(n - 1 - i):
+            if lista[j]["puntaje"] < lista[j + 1]["puntaje"]:
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+

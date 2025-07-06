@@ -1,0 +1,32 @@
+[
+    {
+        "nombre": "Martina",
+        "puntaje": 275,
+        "fecha": "2025-07-06 05:32:08"
+    },
+    {
+        "nombre": "Marianela",
+        "puntaje": -25,
+        "fecha": "2025-07-06 06:11:48"
+    },
+    {
+        "nombre": "martin",
+        "puntaje": -25,
+        "fecha": "2025-07-06 06:17:33"
+    },
+    {
+        "nombre": "federico",
+        "puntaje": 40,
+        "fecha": "2025-07-06 06:32:59"
+    },
+    {
+        "nombre": "jose",
+        "puntaje": 775,
+        "fecha": "2025-07-06 06:33:35"
+    },
+    {
+        "nombre": "Alfredo",
+        "puntaje": 75,
+        "fecha": "2025-07-06 07:52:00"
+    }
+]

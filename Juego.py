@@ -11,7 +11,7 @@ lista_respuestas = crear_lista_respuestas("textura_respuesta.jpg",ANCHO_BOTON,AL
 evento_tiempo = pygame.USEREVENT 
 pygame.time.set_timer(evento_tiempo,1000)    
 
-def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],datos_juego:dict,lista_preguntas:list) -> str:
+def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],datos_juego:dict,lista_preguntas:list,) -> str:
     retorno = "juego"
     pregunta_actual = lista_preguntas[datos_juego["indice"]]
     
@@ -25,14 +25,19 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
         elif evento.type == evento_tiempo:
             datos_juego["tiempo_restante"] -= 1
         elif evento.type == pygame.MOUSEBUTTONDOWN:
-            if evento.button == 1:#Quiero que sea click izquierdo 
-                for i in range(len(lista_respuestas)):#Recorro todos los botones de cada respuesta
-                    if lista_respuestas[i]["rectangulo"].collidepoint(evento.pos): #Verifico si le hice click a uno
+            if evento.button == 1:
+                for i in range(len(lista_respuestas)):
+                    if lista_respuestas[i]["rectangulo"].collidepoint(evento.pos):
                         respuesta = (i + 1)
                         if verificar_respuesta(datos_juego,pregunta_actual,respuesta) == True:
                             CLICK_SONIDO.play()
+                            datos_juego["tiempo_extra"] += 1
+                            if datos_juego["tiempo_extra"] == 5:
+                                datos_juego["tiempo_restante"] += 30
+                                datos_juego["tiempo_extra"] = 0
                         else:
                             ERROR_SONIDO.play()
+                            datos_juego["tiempo_extra"] = 0
                         
                         datos_juego["indice"] += 1
                         
@@ -48,16 +53,15 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
     
     for i in range(len(lista_respuestas)):
         pantalla.blit(lista_respuestas[i]["superficie"],lista_respuestas[i]["rectangulo"])
-        #mostrar_texto(lista_respuestas[i]["superficie"],pregunta_actual[f"respuesta_{i+1}"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
     
     mostrar_texto(cuadro_pregunta["superficie"],pregunta_actual["pregunta"],(15,15),FUENTE_PREGUNTA,COLOR_NEGRO)
     mostrar_texto(lista_respuestas[0]["superficie"],pregunta_actual["respuesta_1"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
     mostrar_texto(lista_respuestas[1]["superficie"],pregunta_actual["respuesta_2"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
     mostrar_texto(lista_respuestas[2]["superficie"],pregunta_actual["respuesta_3"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
+    mostrar_texto(lista_respuestas[3]["superficie"],pregunta_actual["respuesta_4"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
         
     mostrar_texto(pantalla,f"VIDAS: {datos_juego['vidas']}",(10,10),FUENTE_TEXTO,COLOR_NEGRO)
     mostrar_texto(pantalla,f"PUNTUACION: {datos_juego['puntuacion']}",(10,40),FUENTE_TEXTO,COLOR_NEGRO)
     mostrar_texto(pantalla,f"TIEMPO: {datos_juego['tiempo_restante']} seg",(275,10),FUENTE_TEXTO,COLOR_NEGRO)
 
-    #pygame.draw.rect(pantalla,COLOR_NEGRO,cuadro_pregunta["rectangulo"],3)
     return retorno

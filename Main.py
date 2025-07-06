@@ -13,9 +13,8 @@ pygame.display.set_icon(icono)
 
 pantalla = pygame.display.set_mode(PANTALLA)
 corriendo = True
-datos_juego = {"puntuacion":0,"vidas":3,"nombre":"","tiempo_restante":TIEMPO_JUEGO,"volumen_musica":0,"indice":0}
-
-#lista_rankings = cargo el json
+datos_juego = {"puntuacion":0,"vidas":3,"nombre":"","tiempo_restante":TIEMPO_JUEGO,"tiempo_extra": 0,"volumen_musica":0,"indice":0}
+mezclar_lista(lista_preguntas)
 lista_rankings = []
 reloj = pygame.time.Clock()
 ventana_actual = "menu"
@@ -24,7 +23,6 @@ bandera_juego = False
 
 while corriendo:
     reloj.tick(FPS)
-    #El manejo de eventos no lo hacemos aca, pero tenemos que generar la cola de eventos
     cola_eventos = pygame.event.get()
     
     if ventana_actual == "menu":
@@ -32,7 +30,7 @@ while corriendo:
     elif ventana_actual == "salir":
         corriendo = False
     elif ventana_actual == "rankings":
-        ventana_actual = mostrar_rankings(pantalla,cola_eventos,lista_rankings)
+        ventana_actual = mostrar_rankings(pantalla,cola_eventos)
     elif ventana_actual == "ajustes":
         ventana_actual = mostrar_ajustes(pantalla,cola_eventos,datos_juego)
     elif ventana_actual == "juego":
@@ -50,7 +48,6 @@ while corriendo:
             pygame.mixer.music.stop()
         ventana_actual = mostrar_fin_juego(pantalla,cola_eventos,datos_juego)
     
-    #print(f"USTED ESTA PARADO EN LA VENTANA: {ventana_actual}")
     
     pygame.display.flip()
 
