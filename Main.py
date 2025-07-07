@@ -13,7 +13,19 @@ pygame.display.set_icon(icono)
 
 pantalla = pygame.display.set_mode(PANTALLA)
 corriendo = True
-datos_juego = {"puntuacion":0,"vidas":3,"nombre":"","tiempo_restante":TIEMPO_JUEGO,"tiempo_extra": 0,"volumen_musica":0,"indice":0}
+datos_juego = {
+
+    "puntuacion":0,
+    "vidas":3,
+    "nombre":"",
+    "tiempo_restante":TIEMPO_JUEGO,
+    "tiempo_extra": 0,
+    "volumen_musica":50,
+    "indice":0,
+    "volumen_error":100,
+    "volumen_click":100
+
+              }
 mezclar_lista(lista_preguntas)
 lista_rankings = []
 reloj = pygame.time.Clock()
@@ -47,6 +59,10 @@ while corriendo:
             bandera_juego = False
             pygame.mixer.music.stop()
         ventana_actual = mostrar_fin_juego(pantalla,cola_eventos,datos_juego)
+    
+
+    CLICK_SONIDO.set_volume(datos_juego["volumen_click"] / 100)
+    ERROR_SONIDO.set_volume(datos_juego["volumen_error"] / 100)
     
     
     pygame.display.flip()

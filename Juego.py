@@ -1,15 +1,24 @@
 import pygame 
 from Constantes import *
-from Preguntas import *
 from Funciones import *
 
 pygame.init()
 
+comodines_usados = {
+"BOTON_BOMBA": False,
+"BOTON_X2": False,
+"BOTON_DOBLE_CHANCE": False,
+"BOTON_PASAR": False
+
+}
 fondo_pantalla = pygame.transform.scale(pygame.image.load("fondo.jpg"),PANTALLA)
 cuadro_pregunta = crear_elemento_juego("textura_pregunta.jpg",ANCHO_PREGUNTA,ALTO_PREGUNTA,80,80)
 lista_respuestas = crear_lista_respuestas("textura_respuesta.jpg",ANCHO_BOTON,ALTO_BOTON,125,245)
+cuadro_comdin = crear_elemento_juego("textura_pregunta.jpg",ANCHO_BOTON,ALTO_BOTON,80,80)
+lista_comodin = crear_lista_comodin("textura_respuesta.jpg",110,50,10,245)
 evento_tiempo = pygame.USEREVENT 
 pygame.time.set_timer(evento_tiempo,1000)    
+
 
 def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],datos_juego:dict,lista_preguntas:list,) -> str:
     retorno = "juego"
@@ -26,6 +35,46 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
             datos_juego["tiempo_restante"] -= 1
         elif evento.type == pygame.MOUSEBUTTONDOWN:
             if evento.button == 1:
+                for i in range(len(lista_comodin)):
+                    if lista_comodin[i]["rectangulo"].collidepoint(evento.pos):
+
+                        if i == 1 and comodines_usados ["BOTON_BOMBA"] == False :
+                            CLICK_SONIDO.play()                        
+                            comodines_usados ["BOTON_BOMBA"] = True
+
+                                
+                            respuestas_correcta = pregunta_actual["respuesta_correcta"] 
+                            respuestas_eliminadas = 0
+
+                            for j in range(4):
+                                if j + 1 != respuestas_correcta:
+                                    lista_respuestas[j]["text"] = ""
+                                    print(lista_respuestas[j]["text"])
+                                    respuestas_eliminadas += 1
+                                    if respuestas_eliminadas == 2:
+                                        break
+
+
+
+                        elif i == 0 and comodines_usados ["BOTON_X2"] == False :
+                            CLICK_SONIDO.play()
+                            datos_juego["puntuacion"] += PUNTUACION_ACIERTO * 2
+                            datos_juego["puntuacion"] += PUNTUACION_ERROR * 2
+                            comodines_usados ["BOTON_X2"] = True
+                            
+                        elif i == 3 and comodines_usados ["BOTON_PASAR"] == False :
+
+                            mezclar_lista(lista_preguntas)
+                            CLICK_SONIDO.play()
+                            pregunta_actual = pasar_pregunta(lista_preguntas,datos_juego["indice"],cuadro_pregunta,lista_respuestas)
+                            comodines_usados ["BOTON_PASAR"] = True
+
+                        elif i == 2 and comodines_usados ["BOTON_DOBLE_CHANCE"] == False :
+
+                            CLICK_SONIDO.play()
+                            comodines_usados ["BOTON_DOBLE_CHANCE"] = True
+
+                        
                 for i in range(len(lista_respuestas)):
                     if lista_respuestas[i]["rectangulo"].collidepoint(evento.pos):
                         respuesta = (i + 1)
@@ -51,6 +100,28 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
     pantalla.blit(fondo_pantalla,(0,0))
     pantalla.blit(cuadro_pregunta["superficie"],cuadro_pregunta["rectangulo"])
     
+
+    if not comodines_usados["BOTON_X2"]:
+        pantalla.blit(lista_comodin[0]["superficie"], lista_comodin[0]["rectangulo"])
+        mostrar_texto(lista_comodin[0]["superficie"], "X2", (5, 5), FUENTE_TEXTO, COLOR_BLANCO)
+
+    if not comodines_usados["BOTON_BOMBA"]:
+        pantalla.blit(lista_comodin[1]["superficie"], lista_comodin[1]["rectangulo"])
+        mostrar_texto(lista_comodin[1]["superficie"], "BOMBA", (5, 5), FUENTE_TEXTO, COLOR_BLANCO)
+
+    if not comodines_usados["BOTON_DOBLE_CHANCE"]:
+        pantalla.blit(lista_comodin[2]["superficie"], lista_comodin[2]["rectangulo"])
+        mostrar_texto(lista_comodin[2]["superficie"], "DOBLE CHANCE", (-2, -1), FUENTE_TEXTO, COLOR_BLANCO)
+
+    if not comodines_usados["BOTON_PASAR"]:
+        pantalla.blit(lista_comodin[3]["superficie"], lista_comodin[3]["rectangulo"])
+        mostrar_texto(lista_comodin[3]["superficie"], "PASAR", (5, 5), FUENTE_TEXTO, COLOR_BLANCO)
+
+
+
+
+
+
     for i in range(len(lista_respuestas)):
         pantalla.blit(lista_respuestas[i]["superficie"],lista_respuestas[i]["rectangulo"])
     
@@ -64,4 +135,7 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
     mostrar_texto(pantalla,f"PUNTUACION: {datos_juego['puntuacion']}",(10,40),FUENTE_TEXTO,COLOR_NEGRO)
     mostrar_texto(pantalla,f"TIEMPO: {datos_juego['tiempo_restante']} seg",(275,10),FUENTE_TEXTO,COLOR_NEGRO)
 
+
+    
+    
     return retorno

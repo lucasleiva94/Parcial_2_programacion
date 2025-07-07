@@ -7,6 +7,18 @@ import json
 from datetime import datetime
 
 def mostrar_texto(surface, text, pos, font, color=pygame.Color('black')):
+
+    """
+    Dibuja texto multilínea sobre una superficie, ajustando automáticamente las líneas si exceden el ancho.
+
+    Args:
+        surface (pygame.Surface): Superficie sobre la que se va a renderizar el texto.
+        text (str): Texto a mostrar. 
+        pos (tuple): Posición (x, y) inicial del texto.
+        font (pygame.font.Font): Fuente a utilizar.
+        color (pygame.Color, optional): Color del texto. Por defecto es negro.
+    """
+
     words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
     space = font.size(' ')[0]  # The width of a space.
     max_width, max_height = surface.get_size()
@@ -23,7 +35,7 @@ def mostrar_texto(surface, text, pos, font, color=pygame.Color('black')):
         x = pos[0]  # Reset the x.
         y += word_height  # Start on new row.
 
-def crear_elemento_juego(textura:str,ancho:int,alto:int,pos_x:int,pos_y:int) -> dict:
+def crear_elemento_juego(textura:str, ancho:int, alto:int, pos_x:int, pos_y:int) -> dict:
     """Se encarga de crear un elemento en el juego guardando su superficie (textura) y su rectangulo (comportamiento) 
 
     Args:
@@ -42,7 +54,20 @@ def crear_elemento_juego(textura:str,ancho:int,alto:int,pos_x:int,pos_y:int) -> 
     
     return elemento_juego
 
-def crear_lista_respuestas(textura:str,ancho:int,alto:int,pos_x:int,pos_y:int):
+def crear_lista_respuestas(textura:str,ancho:int,alto:int,pos_x:int,pos_y:int) -> list:
+    """
+    Crea una lista de 4 botones para respuestas, dispuestos verticalmente.
+
+    Args:
+        textura (str): Ruta a la textura de los botones.
+        ancho (int): Ancho de cada botón.
+        alto (int): Alto de cada botón.
+        pos_x (int): Coordenada X inicial.
+        pos_y (int): Coordenada Y inicial.
+
+    Returns:
+        list: Lista de diccionarios, cada uno con un botón.
+    """
     lista_respuestas = []
 
     for i in range(4):
@@ -53,6 +78,12 @@ def crear_lista_respuestas(textura:str,ancho:int,alto:int,pos_x:int,pos_y:int):
     return lista_respuestas
 
 def crear_botones_menu() -> list:
+    """
+    Crea 4 botones que simulan un menú, posicionados verticalmente.
+
+    Returns:
+        list: Lista con los botones creados (diccionarios).
+    """
     lista_botones = []
     pos_x = 125
     pos_y = 115
@@ -64,10 +95,30 @@ def crear_botones_menu() -> list:
     
     return lista_botones
 
-def limpiar_superficie(elemento_juego:dict,textura:str,ancho:int,alto:int):
+def limpiar_superficie(elemento_juego:dict, textura:str, ancho:int, alto:int) -> None:
+    """
+    Reasigna la textura de un elemento del juego.
+
+    Args:
+        elemento_juego (dict): Elemento a actualizar.
+        textura (str): Ruta a la nueva textura.
+        ancho (int): Ancho de la textura.
+        alto (int): Alto de la textura.
+    """
     elemento_juego["superficie"] = pygame.transform.scale(pygame.image.load(textura),(ancho,alto))
 
-def verificar_respuesta(datos_juego:dict,pregunta_actual:dict,respuesta:int) -> bool:
+def verificar_respuesta(datos_juego:dict, pregunta_actual:dict, respuesta:int) -> bool:
+    """
+    Verifica si la respuesta seleccionada es correcta y actualiza puntaje y vidas.
+
+    Args:
+        datos_juego (dict): Estadísticas del juego (vidas, puntuación, etc.).
+        pregunta_actual (dict): Pregunta actual con la respuesta correcta.
+        respuesta (int): Número de respuesta elegida.
+
+    Returns:
+        bool: True si la respuesta es correcta, False si es incorrecta.
+    """
     
     if int(pregunta_actual["respuesta_correcta"]) == respuesta:
         datos_juego["puntuacion"] += PUNTUACION_ACIERTO   
@@ -78,13 +129,31 @@ def verificar_respuesta(datos_juego:dict,pregunta_actual:dict,respuesta:int) -> 
         retorno = False
     return retorno
 
-def reiniciar_estadisticas(datos_juego:dict):
+def reiniciar_estadisticas(datos_juego:dict) -> None:
+    """
+    Reinicia las estadísticas del jugador al comenzar una nueva partida.
+
+    Args:
+        datos_juego (dict): Diccionario donde se guardan las estadísticas.
+    """
     datos_juego["vidas"] = CANTIDAD_VIDAS
     datos_juego["puntuacion"] = 0
     datos_juego["nombre"] = ""
     datos_juego["tiempo_restante"] = TIEMPO_JUEGO
 
-def pasar_pregunta(lista_preguntas:list,indice:int,cuadro_pregunta:dict,lista_respuestas:list) -> dict:
+def pasar_pregunta(lista_preguntas:list, indice:int, cuadro_pregunta:dict, lista_respuestas:list) -> dict:
+    """
+    Limpia las texturas y devuelve la siguiente pregunta.
+
+    Args:
+        lista_preguntas (list): Lista de preguntas.
+        indice (int): Índice de la pregunta actual.
+        cuadro_pregunta (dict): Superficie donde se muestra la pregunta.
+        lista_respuestas (list): Lista de botones de respuestas.
+
+    Returns:
+        dict: Pregunta correspondiente al índice actual.
+    """
     pregunta_actual = lista_preguntas[indice]
     limpiar_superficie(cuadro_pregunta,"textura_pregunta.jpg",ANCHO_PREGUNTA,ALTO_PREGUNTA)
     for i in range(len(lista_respuestas)):
@@ -93,9 +162,24 @@ def pasar_pregunta(lista_preguntas:list,indice:int,cuadro_pregunta:dict,lista_re
     return pregunta_actual
 
 def mezclar_lista(lista_preguntas:list) -> None:
+    """
+    Mezcla aleatoriamente la lista de preguntas.
+
+    Args:
+        lista_preguntas (list): Lista a mezclar.
+    """
     random.shuffle(lista_preguntas)
 
-def cargar_preguntas(nombre_archivo):
+def cargar_preguntas(nombre_archivo:str) -> dict:
+    """
+    Carga preguntas desde un archivo CSV y las devuelve como una lista de diccionarios.
+
+    Args:
+        nombre_archivo (str): Ruta al archivo CSV.
+
+    Returns:
+        list: Lista de preguntas, cada una representada como un diccionario.
+    """
     lista_preguntas = []
     with open(nombre_archivo, mode='r', encoding='utf-8-sig') as archivo:
         lector = csv.DictReader(archivo)
@@ -106,13 +190,14 @@ def cargar_preguntas(nombre_archivo):
 
 
 
-def guardar_partida(nombre, puntaje, ruta_json="partidas.json"):
+def guardar_partida(nombre:str, puntaje:int, ruta_json="partidas.json"):
     """
-    Guarda los datos de una partida en un archivo .json
-    args: 
-    nombre(str):recibe el nombre del jugador
-    puntaje(int):puntaje obtenido
-    ruta_json(str): ruta al archivo .json donde vamos a guardar la partida.
+    Guarda el nombre, puntaje y fecha de una partida en un archivo JSON.
+
+    Args:
+        nombre (str): Nombre del jugador.
+        puntaje (int): Puntaje final.
+        ruta_json (str, optional): Ruta del archivo JSON donde se guarda la información.
     """
     partidas = []
     if os.path.exists(ruta_json):
@@ -132,10 +217,58 @@ def guardar_partida(nombre, puntaje, ruta_json="partidas.json"):
         json.dump(partidas, archivo, indent=4, ensure_ascii=False)
 
 
-def ordenar_por_puntaje(lista: list) -> None:
+def ordenar_por_puntaje(lista:list) -> None:
+    """
+    Ordena una lista de diccionarios por la clave 'puntaje' de mayor a menor.
+
+    Args:
+        lista (list): Lista de diccionarios con la clave 'puntaje'.
+    """
     n = len(lista)
     for i in range(n - 1):
         for j in range(n - 1 - i):
             if lista[j]["puntaje"] < lista[j + 1]["puntaje"]:
                 lista[j], lista[j + 1] = lista[j + 1], lista[j]
 
+def crear_botones_comodin_menu() -> list:
+    """
+    Crea botones para seleccionar los comodines en el menú, posicionados verticalmente.
+
+    Returns:
+        list: Lista de botones creados (diccionarios).
+    """
+    lista_botones_comodin = []
+    pos_x = 10
+    pos_y = 250
+
+    for i in range(4):
+        boton = crear_elemento_juego("textura_respuesta.jpg",100,50,pos_x,pos_y)
+        pos_y += 70
+        lista_botones_comodin.append(boton)
+    
+    return lista_botones_comodin
+
+def crear_lista_comodin(textura:str, ancho:int, alto:int, pos_x:int, pos_y:int) -> list:
+    """
+    Crea una lista de botones de comodines.
+
+    Args:
+        textura (str): Ruta a la textura de cada botón.
+        ancho (int): Ancho de cada botón.
+        alto (int): Alto de cada botón.
+        pos_x (int): Coordenada X inicial.
+        pos_y (int): Coordenada Y inicial.
+
+    Returns:
+        list: Lista de botones comodín.
+    """
+    lista_comodin = []
+
+    for i in range(4):
+        respuesta = crear_elemento_juego(textura,ancho,alto,pos_x,pos_y)
+        lista_comodin.append(respuesta)
+        pos_y += 80    
+        
+    return lista_comodin
+
+lista_preguntas = cargar_preguntas("preguntas.csv")
