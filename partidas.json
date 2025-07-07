@@ -28,5 +28,10 @@
         "nombre": "Alfredo",
         "puntaje": 75,
         "fecha": "2025-07-06 07:52:00"
+    },
+    {
+        "nombre": "graciela roldan",
+        "puntaje": -75,
+        "fecha": "2025-07-07 08:18:52"
     }
 ]

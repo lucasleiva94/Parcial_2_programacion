@@ -6,7 +6,7 @@ pygame.init()
 
 fuente = pygame.font.SysFont("Arial Narrow",40)
 cuadro = crear_elemento_juego("textura_respuesta.jpg",ANCHO_BOTON,ALTO_BOTON,125,245)
-fondo_pantalla = pygame.transform.scale(pygame.image.load("fondo.jpg"),PANTALLA)
+fondo_pantalla = pygame.transform.scale(pygame.image.load("fin_juego.jpg"),PANTALLA)
 
 def mostrar_fin_juego(pantalla: pygame.Surface, cola_eventos: list[pygame.event.Event], datos_juego: dict) -> str:
     retorno = "terminado"
@@ -45,7 +45,6 @@ def mostrar_fin_juego(pantalla: pygame.Surface, cola_eventos: list[pygame.event.
 
         
         
-    #pantalla.fill(fondo_pantalla)
     pantalla.blit(fondo_pantalla,(0,0))
     pantalla.blit(cuadro["superficie"],cuadro["rectangulo"])
     mostrar_texto(cuadro["superficie"],datos_juego["nombre"],(10,0),fuente,COLOR_BLANCO)

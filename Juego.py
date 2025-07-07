@@ -15,7 +15,7 @@ fondo_pantalla = pygame.transform.scale(pygame.image.load("fondo.jpg"),PANTALLA)
 cuadro_pregunta = crear_elemento_juego("textura_pregunta.jpg",ANCHO_PREGUNTA,ALTO_PREGUNTA,80,80)
 lista_respuestas = crear_lista_respuestas("textura_respuesta.jpg",ANCHO_BOTON,ALTO_BOTON,125,245)
 cuadro_comdin = crear_elemento_juego("textura_pregunta.jpg",ANCHO_BOTON,ALTO_BOTON,80,80)
-lista_comodin = crear_lista_comodin("textura_respuesta.jpg",110,50,10,245)
+lista_comodin = crear_lista_comodin("textura_respuesta.jpg",110,60,10,245)
 evento_tiempo = pygame.USEREVENT 
 pygame.time.set_timer(evento_tiempo,1000)    
 
@@ -58,8 +58,10 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
 
                         elif i == 0 and comodines_usados ["BOTON_X2"] == False :
                             CLICK_SONIDO.play()
+
                             datos_juego["puntuacion"] += PUNTUACION_ACIERTO * 2
                             datos_juego["puntuacion"] += PUNTUACION_ERROR * 2
+                            
                             comodines_usados ["BOTON_X2"] = True
                             
                         elif i == 3 and comodines_usados ["BOTON_PASAR"] == False :
