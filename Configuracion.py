@@ -61,8 +61,7 @@ def mostrar_ajustes(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event
                         datos_juego["volumen_error"] -= 5
                         datos_juego["volumen_click"] -= 5
                         CLICK_SONIDO.play()
-                elif evento.type == pygame.MOUSEBUTTONDOWN:
-                    print(f"Click en: {evento.pos}")
+
                         
 
 
