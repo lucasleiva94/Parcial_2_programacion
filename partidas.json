@@ -38,5 +38,10 @@
         "nombre": "Ana",
         "puntaje": 1775,
         "fecha": "2025-07-07 15:29:21"
+    },
+    {
+        "nombre": "lucas leiva 1",
+        "puntaje": 200,
+        "fecha": "2025-07-08 08:59:24"
     }
 ]

@@ -27,10 +27,13 @@ ANCHO_PREGUNTA = 350
 ALTO_PREGUNTA = 150
 ANCHO_BOTON = 250
 ALTO_BOTON = 60
+
 TAMAÑO_BOTON_VOLUMEN = (60,60)
 TAMAÑO_BOTON_VOLVER = (100,40)
+
 CLICK_SONIDO = pygame.mixer.Sound("click.mp3")
 ERROR_SONIDO = pygame.mixer.Sound("error.mp3")
+
 FUENTE_PREGUNTA = pygame.font.SysFont("Arial",28,True)
 FUENTE_RESPUESTA = pygame.font.SysFont("Arial",20,True)
 FUENTE_TEXTO = pygame.font.SysFont("Arial",25,True)

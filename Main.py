@@ -24,7 +24,8 @@ datos_juego = {
     "indice": 0,
     "volumen_error": 100,
     "volumen_click": 100,
-    "comodin_X2": False
+    "comodin_X2": False,
+    "opciones_visibles": [True, True, True, True]
 
               }
 mezclar_lista(lista_preguntas)

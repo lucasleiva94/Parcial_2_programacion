@@ -40,19 +40,18 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
                 for i in range(len(lista_comodin)):
                     if lista_comodin[i]["rectangulo"].collidepoint(evento.pos):
 
-                        if i == 1 and comodines_usados ["BOTON_BOMBA"] == False :
+                        if i == 1 and not comodines_usados["BOTON_BOMBA"]:
                             CLICK_SONIDO.play()                        
-                            comodines_usados ["BOTON_BOMBA"] = True
-                            #limpiar_superficie(lista_respuestas[0],"textura_respuesta.jpg", 250, 50)
-                            #pantalla.blit(lista_respuestas[i]["superficie"],lista_respuestas[i]["rectangulo"])
-                            #respuestas_correcta = pregunta_actual["respuesta_correcta"] 
-                            #respuestas_eliminadas = 0
-                            #for j in range(4):
-                            #    if j + 1 != respuestas_correcta:
-                            #        mostrar_texto(cuadro_pregunta["superficie"],pregunta_actual["pregunta"],(15,15),FUENTE_PREGUNTA,COLOR_NEGRO)
-                            #        mostrar_texto(lista_respuestas[j]["superficie"],pregunta_actual["respuesta_1"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
-                            #        if respuestas_eliminadas == 2:
-                            #            break
+                            comodines_usados["BOTON_BOMBA"] = True
+
+                            correcta = int(pregunta_actual["respuesta_correcta"]) - 1
+                            opciones_incorrectas = [j for j in range(4) if j != correcta]
+                            random.shuffle(opciones_incorrectas)
+
+                            datos_juego["opciones_visibles"] = [True, True, True, True]
+                            datos_juego["opciones_visibles"][opciones_incorrectas[0]] = False
+                            datos_juego["opciones_visibles"][opciones_incorrectas[1]] = False
+
 
 
 
@@ -100,10 +99,13 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
                             mezclar_lista(lista_preguntas)
                         
                         pregunta_actual = pasar_pregunta(lista_preguntas,datos_juego["indice"],cuadro_pregunta,lista_respuestas)
+                        datos_juego["opciones_visibles"] = [True, True, True, True]
                                         
     
     pantalla.blit(fondo_pantalla,(0,0))
     pantalla.blit(cuadro_pregunta["superficie"],cuadro_pregunta["rectangulo"])
+    mostrar_texto(cuadro_pregunta["superficie"], pregunta_actual["pregunta"], (15, 15), FUENTE_PREGUNTA, COLOR_NEGRO)
+
     
 
     if not comodines_usados["BOTON_X2"]:
@@ -128,13 +130,12 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
 
 
     for i in range(len(lista_respuestas)):
-        pantalla.blit(lista_respuestas[i]["superficie"],lista_respuestas[i]["rectangulo"])
-    mostrar_texto(cuadro_pregunta["superficie"],pregunta_actual["pregunta"],(15,15),FUENTE_PREGUNTA,COLOR_NEGRO)
+        if datos_juego.get("opciones_visibles")[i]:
+            pantalla.blit(lista_respuestas[i]["superficie"], lista_respuestas[i]["rectangulo"])
+            mostrar_texto(lista_respuestas[i]["superficie"], pregunta_actual[f"respuesta_{i + 1}"], (15, 15), FUENTE_RESPUESTA, COLOR_BLANCO)
 
-    mostrar_texto(lista_respuestas[0]["superficie"],pregunta_actual["respuesta_1"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
-    mostrar_texto(lista_respuestas[1]["superficie"],pregunta_actual["respuesta_2"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
-    mostrar_texto(lista_respuestas[2]["superficie"],pregunta_actual["respuesta_3"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
-    mostrar_texto(lista_respuestas[3]["superficie"],pregunta_actual["respuesta_4"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
+
+
 
     mostrar_texto(pantalla,f"VIDAS: {datos_juego['vidas']}",(10,10),FUENTE_TEXTO,COLOR_NEGRO)
     mostrar_texto(pantalla,f"PUNTUACION: {datos_juego['puntuacion']}",(10,40),FUENTE_TEXTO,COLOR_NEGRO)

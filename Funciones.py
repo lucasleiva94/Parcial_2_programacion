@@ -141,7 +141,7 @@ def reiniciar_estadisticas(datos_juego:dict) -> None:
     datos_juego["nombre"] = ""
     datos_juego["tiempo_restante"] = TIEMPO_JUEGO
 
-def pasar_pregunta(lista_preguntas:list, indice:int, cuadro_pregunta:dict, lista_respuestas:list) -> dict:
+def pasar_pregunta(lista_preguntas:list, indice:int, cuadro_pregunta:dict, lista_respuestas:list,) -> dict:
     """
     Limpia las texturas y devuelve la siguiente pregunta.
 
@@ -158,6 +158,7 @@ def pasar_pregunta(lista_preguntas:list, indice:int, cuadro_pregunta:dict, lista
     limpiar_superficie(cuadro_pregunta,"textura_pregunta.jpg",ANCHO_PREGUNTA,ALTO_PREGUNTA)
     for i in range(len(lista_respuestas)):
         limpiar_superficie(lista_respuestas[i],"textura_respuesta.jpg",ANCHO_BOTON,ALTO_BOTON)
+    
     
     return pregunta_actual
 
