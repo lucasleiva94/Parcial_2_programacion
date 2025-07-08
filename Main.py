@@ -15,15 +15,16 @@ pantalla = pygame.display.set_mode(PANTALLA)
 corriendo = True
 datos_juego = {
 
-    "puntuacion":0,
-    "vidas":3,
-    "nombre":"",
-    "tiempo_restante":TIEMPO_JUEGO,
+    "puntuacion": 0,
+    "vidas": 3,
+    "nombre": "",
+    "tiempo_restante": TIEMPO_JUEGO,
     "tiempo_extra": 0,
-    "volumen_musica":50,
-    "indice":0,
-    "volumen_error":100,
-    "volumen_click":100
+    "volumen_musica": 50,
+    "indice": 0,
+    "volumen_error": 100,
+    "volumen_click": 100,
+    "comodin_X2": False
 
               }
 mezclar_lista(lista_preguntas)

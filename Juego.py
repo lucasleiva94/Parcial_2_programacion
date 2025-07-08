@@ -16,6 +16,8 @@ cuadro_pregunta = crear_elemento_juego("textura_pregunta.jpg",ANCHO_PREGUNTA,ALT
 lista_respuestas = crear_lista_respuestas("textura_respuesta.jpg",ANCHO_BOTON,ALTO_BOTON,125,245)
 cuadro_comdin = crear_elemento_juego("textura_pregunta.jpg",ANCHO_BOTON,ALTO_BOTON,80,80)
 lista_comodin = crear_lista_comodin("textura_respuesta.jpg",110,60,10,245)
+
+
 evento_tiempo = pygame.USEREVENT 
 pygame.time.set_timer(evento_tiempo,1000)    
 
@@ -41,26 +43,24 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
                         if i == 1 and comodines_usados ["BOTON_BOMBA"] == False :
                             CLICK_SONIDO.play()                        
                             comodines_usados ["BOTON_BOMBA"] = True
-
-                                
-                            respuestas_correcta = pregunta_actual["respuesta_correcta"] 
-                            respuestas_eliminadas = 0
-
-                            for j in range(4):
-                                if j + 1 != respuestas_correcta:
-                                    lista_respuestas[j]["text"] = ""
-                                    print(lista_respuestas[j]["text"])
-                                    respuestas_eliminadas += 1
-                                    if respuestas_eliminadas == 2:
-                                        break
+                            #limpiar_superficie(lista_respuestas[0],"textura_respuesta.jpg", 250, 50)
+                            #pantalla.blit(lista_respuestas[i]["superficie"],lista_respuestas[i]["rectangulo"])
+                            #respuestas_correcta = pregunta_actual["respuesta_correcta"] 
+                            #respuestas_eliminadas = 0
+                            #for j in range(4):
+                            #    if j + 1 != respuestas_correcta:
+                            #        mostrar_texto(cuadro_pregunta["superficie"],pregunta_actual["pregunta"],(15,15),FUENTE_PREGUNTA,COLOR_NEGRO)
+                            #        mostrar_texto(lista_respuestas[j]["superficie"],pregunta_actual["respuesta_1"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
+                            #        if respuestas_eliminadas == 2:
+                            #            break
 
 
 
                         elif i == 0 and comodines_usados ["BOTON_X2"] == False :
                             CLICK_SONIDO.play()
+                            datos_juego["comodin_X2"] = True
 
-                            datos_juego["puntuacion"] += PUNTUACION_ACIERTO * 2
-                            datos_juego["puntuacion"] += PUNTUACION_ERROR * 2
+
                             
                             comodines_usados ["BOTON_X2"] = True
                             
@@ -82,6 +82,9 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
                         respuesta = (i + 1)
                         if verificar_respuesta(datos_juego,pregunta_actual,respuesta) == True:
                             CLICK_SONIDO.play()
+                            if datos_juego["comodin_X2"] == True:
+                                verificar_respuesta(datos_juego,pregunta_actual,respuesta)
+                                datos_juego["comodin_X2"] = False
                             datos_juego["tiempo_extra"] += 1
                             if datos_juego["tiempo_extra"] == 5:
                                 datos_juego["tiempo_restante"] += 30
@@ -126,13 +129,13 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
 
     for i in range(len(lista_respuestas)):
         pantalla.blit(lista_respuestas[i]["superficie"],lista_respuestas[i]["rectangulo"])
-    
     mostrar_texto(cuadro_pregunta["superficie"],pregunta_actual["pregunta"],(15,15),FUENTE_PREGUNTA,COLOR_NEGRO)
+
     mostrar_texto(lista_respuestas[0]["superficie"],pregunta_actual["respuesta_1"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
     mostrar_texto(lista_respuestas[1]["superficie"],pregunta_actual["respuesta_2"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
     mostrar_texto(lista_respuestas[2]["superficie"],pregunta_actual["respuesta_3"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
     mostrar_texto(lista_respuestas[3]["superficie"],pregunta_actual["respuesta_4"],(15,15),FUENTE_RESPUESTA,COLOR_BLANCO)
-        
+
     mostrar_texto(pantalla,f"VIDAS: {datos_juego['vidas']}",(10,10),FUENTE_TEXTO,COLOR_NEGRO)
     mostrar_texto(pantalla,f"PUNTUACION: {datos_juego['puntuacion']}",(10,40),FUENTE_TEXTO,COLOR_NEGRO)
     mostrar_texto(pantalla,f"TIEMPO: {datos_juego['tiempo_restante']} seg",(275,10),FUENTE_TEXTO,COLOR_NEGRO)
