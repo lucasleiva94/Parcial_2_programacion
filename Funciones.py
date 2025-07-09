@@ -183,7 +183,7 @@ def cargar_preguntas(nombre_archivo:str) -> dict:
     with open(nombre_archivo, mode='r', encoding='utf-8-sig') as archivo:
         lector = csv.DictReader(archivo)
         for fila in lector:
-            lista_preguntas.append(dict(fila))  # Cada fila es un diccionario
+            lista_preguntas.append(dict(fila))
             
     return lista_preguntas
 
