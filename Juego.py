@@ -46,9 +46,7 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
 
                             correcta = int(pregunta_actual["respuesta_correcta"]) - 1
                             opciones_incorrectas = [j for j in range(4) if j != correcta]
-                            random.shuffle(opciones_incorrectas)
 
-                            datos_juego["opciones_visibles"] = [True, True, True, True]
                             datos_juego["opciones_visibles"][opciones_incorrectas[0]] = False
                             datos_juego["opciones_visibles"][opciones_incorrectas[1]] = False
 
@@ -89,7 +87,6 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
                 
                             datos_juego["tiempo_extra"] += 1
                             datos_juego["doble_chance_activado"] = False
-                            datos_juego["doble_chance_usado"] = False
                 
                             if datos_juego["tiempo_extra"] == 5:
                                 datos_juego["tiempo_restante"] += 30
@@ -115,8 +112,7 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
                             else:
                                 datos_juego["vidas"] -= 1
                                 datos_juego["puntuacion"] -= PUNTUACION_ERROR
-                                datos_juego["doble_chance_activado"] = False
-                                datos_juego["doble_chance_usado"] = False
+
                 
                                 datos_juego["indice"] += 1
                                 if datos_juego["indice"] >= len(lista_preguntas):
