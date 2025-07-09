@@ -71,35 +71,62 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
                             comodines_usados ["BOTON_PASAR"] = True
 
                         elif i == 2 and comodines_usados ["BOTON_DOBLE_CHANCE"] == False :
-
                             CLICK_SONIDO.play()
-                            comodines_usados ["BOTON_DOBLE_CHANCE"] = True
+                            comodines_usados["BOTON_DOBLE_CHANCE"] = True
+                            datos_juego["doble_chance_activado"] = True
+                            datos_juego["doble_chance_usado"] = False
+
 
                         
                 for i in range(len(lista_respuestas)):
                     if lista_respuestas[i]["rectangulo"].collidepoint(evento.pos):
                         respuesta = (i + 1)
-                        if verificar_respuesta(datos_juego,pregunta_actual,respuesta) == True:
+                        if verificar_respuesta(datos_juego, pregunta_actual, respuesta):
                             CLICK_SONIDO.play()
-                            if datos_juego["comodin_X2"] == True:
-                                verificar_respuesta(datos_juego,pregunta_actual,respuesta)
+                            if datos_juego.get("comodin_X2", False):
+                                verificar_respuesta(datos_juego, pregunta_actual, respuesta)
                                 datos_juego["comodin_X2"] = False
+                
                             datos_juego["tiempo_extra"] += 1
+                            datos_juego["doble_chance_activado"] = False
+                            datos_juego["doble_chance_usado"] = False
+                
                             if datos_juego["tiempo_extra"] == 5:
                                 datos_juego["tiempo_restante"] += 30
                                 datos_juego["tiempo_extra"] = 0
+                
+                            datos_juego["indice"] += 1
+                            if datos_juego["indice"] >= len(lista_preguntas):
+                                datos_juego["indice"] = 0
+                                mezclar_lista(lista_preguntas)
+                
+                            pregunta_actual = pasar_pregunta(lista_preguntas, datos_juego["indice"], cuadro_pregunta, lista_respuestas)
+                            datos_juego["opciones_visibles"] = [True, True, True, True]
+                
                         else:
                             ERROR_SONIDO.play()
                             datos_juego["tiempo_extra"] = 0
-                        
-                        datos_juego["indice"] += 1
-                        
-                        if datos_juego["indice"] >= len(lista_preguntas):
-                            datos_juego["indice"] = 0
-                            mezclar_lista(lista_preguntas)
-                        
-                        pregunta_actual = pasar_pregunta(lista_preguntas,datos_juego["indice"],cuadro_pregunta,lista_respuestas)
-                        datos_juego["opciones_visibles"] = [True, True, True, True]
+                
+
+                            if datos_juego["doble_chance_activado"] == True and datos_juego["doble_chance_usado"] == False:
+                                datos_juego["opciones_visibles"][respuesta - 1] = False
+                                datos_juego["doble_chance_usado"] = True
+                
+                            else:
+                                datos_juego["vidas"] -= 1
+                                datos_juego["puntuacion"] -= PUNTUACION_ERROR
+                                datos_juego["doble_chance_activado"] = False
+                                datos_juego["doble_chance_usado"] = False
+                
+                                datos_juego["indice"] += 1
+                                if datos_juego["indice"] >= len(lista_preguntas):
+                                    datos_juego["indice"] = 0
+                                    mezclar_lista(lista_preguntas)
+                
+                                pregunta_actual = pasar_pregunta(lista_preguntas, datos_juego["indice"], cuadro_pregunta, lista_respuestas)
+                                datos_juego["opciones_visibles"] = [True, True, True, True]
+
+
                                         
     
     pantalla.blit(fondo_pantalla,(0,0))

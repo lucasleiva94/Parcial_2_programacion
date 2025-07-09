@@ -124,8 +124,6 @@ def verificar_respuesta(datos_juego:dict, pregunta_actual:dict, respuesta:int) -
         datos_juego["puntuacion"] += PUNTUACION_ACIERTO   
         retorno = True         
     else:
-        datos_juego["puntuacion"] -= PUNTUACION_ERROR
-        datos_juego["vidas"] -= 1
         retorno = False
     return retorno
 
@@ -273,3 +271,17 @@ def crear_lista_comodin(textura:str, ancho:int, alto:int, pos_x:int, pos_y:int) 
     return lista_comodin
 
 lista_preguntas = cargar_preguntas("preguntas.csv")
+
+def leer_json() -> dict:
+    """
+    Lee un archivo json y las ordena por puntaje de mayor a menor
+
+    """
+    print("Leyendo partidas.json...")
+    with open("partidas.json", "r", encoding="utf-8") as archivo:
+        partidas = json.load(archivo)
+        ordenar_por_puntaje(partidas)
+
+    return partidas
+
+

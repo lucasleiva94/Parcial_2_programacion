@@ -25,15 +25,18 @@ datos_juego = {
     "volumen_error": 100,
     "volumen_click": 100,
     "comodin_X2": False,
-    "opciones_visibles": [True, True, True, True]
+    "opciones_visibles": [True, True, True, True],
+    "doble_chance_activado": False,
+    "doble_chance_usado": False
 
               }
 mezclar_lista(lista_preguntas)
 lista_rankings = []
 reloj = pygame.time.Clock()
 ventana_actual = "menu"
-
+Flag_abierto = True
 bandera_juego = False
+bandera_rankings = False
 
 while corriendo:
     reloj.tick(FPS)
@@ -43,8 +46,19 @@ while corriendo:
         ventana_actual = mostrar_menu(pantalla,cola_eventos)
     elif ventana_actual == "salir":
         corriendo = False
-    elif ventana_actual == "rankings":
-        ventana_actual = mostrar_rankings(pantalla,cola_eventos)
+    if ventana_actual == "rankings":
+
+
+        if bandera_rankings == False :
+            partidas = leer_json()
+            bandera_rankings = True
+
+        ventana_actual = mostrar_rankings(pantalla, cola_eventos, partidas)
+
+    elif ventana_actual == "menu":
+        bandera_rankings = False  # Reinicio cuando vuelvo al menú
+
+
     elif ventana_actual == "ajustes":
         ventana_actual = mostrar_ajustes(pantalla,cola_eventos,datos_juego)
     elif ventana_actual == "juego":
@@ -61,6 +75,7 @@ while corriendo:
             bandera_juego = False
             pygame.mixer.music.stop()
         ventana_actual = mostrar_fin_juego(pantalla,cola_eventos,datos_juego)
+        
     
 
     CLICK_SONIDO.set_volume(datos_juego["volumen_click"] / 100)
