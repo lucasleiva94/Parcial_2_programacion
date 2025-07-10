@@ -153,7 +153,7 @@ def mostrar_juego(pantalla:pygame.Surface,cola_eventos:list[pygame.event.Event],
 
 
     for i in range(len(lista_respuestas)):
-        if datos_juego.get("opciones_visibles")[i]:
+        if datos_juego["opciones_visibles"][i] == True:
             pantalla.blit(lista_respuestas[i]["superficie"], lista_respuestas[i]["rectangulo"])
             mostrar_texto(lista_respuestas[i]["superficie"], pregunta_actual[f"respuesta_{i + 1}"], (15, 15), FUENTE_RESPUESTA, COLOR_BLANCO)
 
