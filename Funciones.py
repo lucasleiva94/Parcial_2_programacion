@@ -277,7 +277,6 @@ def leer_json() -> dict:
     Lee un archivo json y las ordena por puntaje de mayor a menor
 
     """
-    print("Leyendo partidas.json...")
     with open("partidas.json", "r", encoding="utf-8") as archivo:
         partidas = json.load(archivo)
         ordenar_por_puntaje(partidas)
