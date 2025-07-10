@@ -56,7 +56,7 @@ while corriendo:
         ventana_actual = mostrar_rankings(pantalla, cola_eventos, partidas)
 
     elif ventana_actual == "menu":
-        bandera_rankings = False  # Reinicio cuando vuelvo al menú
+        bandera_rankings = False
 
 
     elif ventana_actual == "ajustes":
